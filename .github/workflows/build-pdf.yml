@@ -37,7 +37,7 @@ jobs:
         run: python3 build/build.py
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: kubernetes-internals-worksheet
           path: dist/kubernetes-internals-worksheet.pdf
