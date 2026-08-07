@@ -38,11 +38,67 @@ Contents, in order:
 
 ## Mermaid rules (build breaks if you're clever)
 
-- Allowed types only: `sequenceDiagram`, `flowchart LR`/`flowchart TD`, `stateDiagram-v2`.
+- Allowed types only: `sequenceDiagram`, `flowchart TD` (preferred) / `flowchart LR`, `stateDiagram-v2`.
 - Sequence diagrams for under-the-hood flows; flowcharts for decisions; state diagrams for lifecycles.
 - Participant names short and consistent across ALL chapters: `User`, `API` (kube-apiserver), `etcd`, `Sched` (kube-scheduler), `KCM` (controller-manager), `Kubelet`, `CRI` (container runtime), `CNI`, `CSI`, `KProxy` (kube-proxy), `Ctrl` (a custom controller).
-- Keep it simple: no themes, no `%%{init}%%` directives, no custom colors, no `par`/`critical` blocks; `alt`/`opt`/`Note` are fine. ≤ 14 participants/nodes. Label every arrow with a short verb phrase.
-- In node/edge labels avoid characters that break mermaid: `(){}[]<>"`; use plain words. Quote a label only using double quotes if it contains spaces plus special chars — better: avoid entirely.
+- Keep it simple: no `%%{init}%%` directives, no `par`/`critical` blocks; `alt`/`opt`/`Note` are fine. Label every arrow with a short verb phrase.
+- In node/edge labels avoid characters that break mermaid: `(){}[]<>"`; use plain words. Quote a label only using double quotes if it contains spaces plus special chars — better: avoid entirely. No HTML anywhere in a diagram body.
+- `sequenceDiagram`: start with `autonumber`. Keep to ≤ 6 participants. Message text ≤ 6 words — message length is what makes these diagrams too wide to read.
+
+### The size gate (this is a hard limit, not a preference)
+
+The page gives a diagram **174 mm** of width and **150 mm** of height, and the image is scaled by
+`min(174/W, 150/H)`. So a diagram that is too **tall** shrinks exactly like one that is too **wide**.
+Mermaid's label font is ~16 px; below about 7 pt it is unreadable in print.
+
+**Every diagram must render within W ≤ 1000 px and H ≤ 950 px.**
+
+Check before you commit:
+
+```bash
+python3 build/check_diagrams.py chapters/ch04.md      # or chapters/*.md
+```
+
+Staying inside the gate:
+
+- ≤ 12 nodes per diagram, ≤ 3 nodes per rank, ≤ 4 words per node or edge label.
+- Prefer `flowchart TD`. Use `LR` only for genuinely short chains.
+- Avoid subgraphs that carry edges to nodes outside themselves — the layout goes wide regardless.
+- If a diagram cannot fit, that usually means it is making two points. Say so and get the split reviewed
+  rather than shrinking labels into noise — splitting adds a figure and **renumbers every later figure
+  in the chapter**, and figure numbers are referenced from prose in other chapters.
+
+### Colour: class nodes by semantic role
+
+Flowcharts and state diagrams carry a small semantic palette, so role reads at a glance.
+`classDef` is **not supported in `sequenceDiagram`** — those use `autonumber` and stay uncoloured.
+
+| Class | Use for | Fill | Stroke |
+|---|---|---|---|
+| `leader` | active / primary actor | `#10b981` | `#047857` |
+| `standby` | passive / waiting | `#94a3b8` | `#475569` |
+| `lease` | coordination primitive (lock, lease, queue) | `#f59e0b` | `#b45309` |
+| `resource` | the resource being acted on | `#fb7185` | `#be123c` |
+| `external` | external system (cloud API, plugin) | `#64748b` | `#334155` |
+| `process` | logic, decision, generic step | `#38bdf8` | `#0369a1` |
+
+All fills use `color:#fff`. Rules:
+
+- Declare only the classes the diagram uses.
+- Once you class one node, class **every** node — a half-coloured diagram looks broken.
+- Put `classDef` and `class` lines at the bottom of the diagram body. Inside a subgraph, after the `end`.
+
+```
+  classDef process fill:#38bdf8,stroke:#0369a1,color:#fff
+  class AUTHN,AUTHZ process
+```
+
+### Caption coupling (silent failure if you get this wrong)
+
+`build/build.py` matches a diagram with the regex ` ```mermaid … ``` ` followed by **only whitespace**
+and then the `*Figure N.M — caption*` line. Put anything else between them and the match fails: the build
+still exits 0 and raw mermaid source lands in the PDF. Keep the caption immediately after the closing
+fence, on its own line, as plain italic text with no internal `**bold**`.
 
 ## Question format (strict)
 
