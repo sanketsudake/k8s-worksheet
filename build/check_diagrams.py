@@ -47,6 +47,8 @@ HTML_RE = re.compile(r"<[a-zA-Z/]")
 VIEWBOX_RE = re.compile(r'viewBox="-?[\d.]+ -?[\d.]+ ([\d.]+) ([\d.]+)"')
 
 CACHE = os.path.join(tempfile.gettempdir(), "k8s-worksheet-diagram-check")
+# Same layout config build.py renders with, so this measures what gets built.
+MERMAID_CFG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "mermaid-config.json")
 
 
 def _puppeteer_config():
@@ -61,13 +63,15 @@ def _puppeteer_config():
 
 def measure(code, pptr):
     """Render one diagram and return ((width, height), None) or (None, error)."""
-    digest = hashlib.md5(code.encode()).hexdigest()[:12]
+    stamp = hashlib.md5(open(MERMAID_CFG, "rb").read()).hexdigest()[:6]
+    digest = hashlib.md5((code + stamp).encode()).hexdigest()[:12]
     svg = os.path.join(CACHE, digest + ".svg")
     if not os.path.exists(svg):
         src = os.path.join(CACHE, digest + ".mmd")
         with open(src, "w") as f:
             f.write(code)
-        r = subprocess.run(["mmdc", "-i", src, "-o", svg, "-p", pptr, "--quiet"],
+        r = subprocess.run(["mmdc", "-i", src, "-o", svg, "-p", pptr,
+                            "-c", MERMAID_CFG, "--quiet"],
                            capture_output=True, text=True)
         if r.returncode != 0 or not os.path.exists(svg):
             return None, (r.stderr or "render failed").strip()[-200:]

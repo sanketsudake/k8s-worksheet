@@ -22,6 +22,7 @@ notes/        Research notes (version facts) and the original plan
 build/        PDF build pipeline
   build.py            Renders diagrams, assembles HTML, writes the PDF
   check_diagrams.py   Diagram size gate — run before committing
+  mermaid-config.json Diagram layout, shared by build.py and the gate
   style.css, cover.html
 dist/         Build output (gitignored): the PDF, rendered diagrams
 ```

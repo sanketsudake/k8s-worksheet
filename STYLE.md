@@ -59,9 +59,17 @@ Check before you commit:
 python3 build/check_diagrams.py chapters/ch04.md      # or chapters/*.md
 ```
 
+`build/mermaid-config.json` already tightens sequence-diagram layout (narrower actor boxes and
+margins) and both the build and the checker render with it. Mermaid's stock 150 px actor box puts a
+floor of roughly 1,450 px under a seven-participant diagram, which is unreadable on A4; the tuned
+config removes that floor, so you should not need to drop an actor to make a diagram fit.
+
 Staying inside the gate:
 
 - ≤ 12 nodes per diagram, ≤ 3 nodes per rank, ≤ 4 words per node or edge label.
+- **Never drop a participant, node or edge to make a diagram fit.** Shorten the label text instead.
+  A diagram that omits a real step is a worse defect than one that is hard to read, and removing a
+  subgraph box is not licence to wire its members together — grouping is not a call path.
 - Prefer `flowchart TD`. Use `LR` only for genuinely short chains.
 - Avoid subgraphs that carry edges to nodes outside themselves — the layout goes wide regardless.
 - If a diagram cannot fit, that usually means it is making two points. Say so and get the split reviewed

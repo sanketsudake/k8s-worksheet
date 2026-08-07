@@ -37,8 +37,18 @@ with open(PPTR, "w") as f:
 
 MMD_RE = re.compile(r"```mermaid\n(.*?)```\s*\n\s*(\*Figure[^\n]*\*)", re.S)
 
+# Layout config, shared with build/check_diagrams.py so the size the gate
+# measures is the size that actually gets built. Mermaid's default 150px actor
+# box and 50px margin put a hard floor under sequence-diagram width -- roughly
+# 1450px at 7 participants -- which shrinks labels below readable size on A4.
+MERMAID_CFG = os.path.join(BUILD_DIR := os.path.dirname(os.path.abspath(__file__)),
+                           "mermaid-config.json")
+CFG_STAMP = hashlib.md5(open(MERMAID_CFG, "rb").read()).hexdigest()[:6]
+
 def render_mermaid(code: str) -> str:
-    h = hashlib.md5(code.encode()).hexdigest()[:12]
+    # Cache key includes the config: change the layout and every diagram must
+    # re-render, otherwise stale PNGs from the old layout survive.
+    h = hashlib.md5((code + CFG_STAMP).encode()).hexdigest()[:12]
     png = os.path.join(DIA, f"{h}.png")
     if not os.path.exists(png):
         src = os.path.join(DIA, f"{h}.mmd")
@@ -46,7 +56,7 @@ def render_mermaid(code: str) -> str:
             f.write(code)
         r = subprocess.run(
             ["mmdc", "-i", src, "-o", png, "-b", "white", "-s", "3", "-w", "1000",
-             "-p", PPTR, "--quiet"],
+             "-p", PPTR, "-c", MERMAID_CFG, "--quiet"],
             capture_output=True, text=True)
         if r.returncode != 0 or not os.path.exists(png):
             print(f"MERMAID FAIL {h}: {r.stderr[-600:]}", file=sys.stderr)
