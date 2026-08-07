@@ -29,6 +29,7 @@
 **Reference**
 
 - [Appendices](chapters/appendices.md)
+- [The 27 flows](FLOWS.md)
 
 ## Contributing
 
