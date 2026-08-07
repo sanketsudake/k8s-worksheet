@@ -9,9 +9,9 @@ Two things are verified.
 1. Size. The page gives a diagram 174mm of width (A4 minus 18mm margins) and
    150mm of height, so the image is scaled by min(174/W, 150/H). A diagram that
    is too tall shrinks exactly like one that is too wide. Mermaid's label font
-   is ~16px, and print needs at least ~7pt, which puts the ceiling at
-   W <= 1000 and H <= 950. The reported "pt" column is the size a label
-   actually prints at.
+   is ~16px and print needs at least 7pt, so the gate is the resulting "pt"
+   column -- the size a label actually prints at. Roughly, that means staying
+   under ~1100px wide or ~960px tall, whichever binds first.
 
 2. Caption coupling. build.py pairs a diagram with its caption using a regex
    that allows only whitespace between the closing fence and the *Figure ...*
@@ -31,7 +31,10 @@ import subprocess
 import sys
 import tempfile
 
-W_LIMIT, H_LIMIT = 1000, 950
+# The gate is the size a label actually prints at, not the raw pixel box.
+# W/H limits alone are a proxy: a 1050px-wide diagram that is also short still
+# prints at ~7.5pt and reads fine, while a narrow but very tall one does not.
+MIN_PT = 7.0
 TEXT_MM, HEIGHT_MM = 174.0, 150.0
 FONT_PX = 16
 
@@ -99,18 +102,17 @@ def check(path, pptr):
             problems += 1
             continue
         w, h = dims
+        pt = FONT_PX * min(TEXT_MM / w, HEIGHT_MM / h) * 72 / 25.4
         flags = []
-        if w > W_LIMIT:
-            flags.append("WIDE")
-        if h > H_LIMIT:
-            flags.append("TALL")
+        if pt < MIN_PT:
+            # say which dimension is the binding one, so the fix is obvious
+            flags.append("TOO WIDE" if TEXT_MM / w < HEIGHT_MM / h else "TOO TALL")
         if HTML_RE.search(code):
             flags.append("HTML-IN-LABEL")
         if flags:
             problems += 1
-        pt = FONT_PX * min(TEXT_MM / w, HEIGHT_MM / h) * 72 / 25.4
         print(f"  {i:2d}. {','.join(flags) or 'ok':<14} w={w:7.1f} h={h:6.1f} "
-              f"~{pt:4.1f}pt  {kind:<17} {caption[:38]}")
+              f"{pt:4.1f}pt  {kind:<17} {caption[:38]}")
     return problems
 
 
@@ -122,7 +124,7 @@ def main(paths):
     pptr = _puppeteer_config()
     total = sum(check(p, pptr) for p in paths)
     print(f"\n==== {'FAIL' if total else 'PASS'}: {total} problem(s); "
-          f"gate is W<={W_LIMIT} H<={H_LIMIT}, ~7pt minimum in print ====")
+          f"gate is {MIN_PT}pt minimum label size in print ====")
     return 1 if total else 0
 
 
