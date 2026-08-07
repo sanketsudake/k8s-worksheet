@@ -2,6 +2,8 @@
 
 **Kubernetes Internals Interview Worksheet** — a flow-first prep guide for senior and staff-level interviews on Kubernetes internals.
 
+**[Download the PDF](https://github.com/sanketsudake/k8s-worksheet/releases/latest/download/kubernetes-internals-worksheet.pdf)** · [all releases](https://github.com/sanketsudake/k8s-worksheet/releases)
+
 ## Chapters
 
 **Part A — Foundations & control plane internals**
