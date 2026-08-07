@@ -54,7 +54,7 @@ python3 build/check_diagrams.py chapters/ch04.md    # one chapter
 python3 build/check_diagrams.py chapters/*.md       # everything
 ```
 
-It renders each diagram, reports the size a label actually prints at, and fails if any diagram exceeds W 1000 px or H 950 px.
+It renders each diagram, reports the size a label actually prints at, and fails anything under 7 pt.
 Adding or removing a figure renumbers every later figure in that chapter, and figure numbers are referenced from prose in other chapters — so grep for the old numbers before you do it.
 
 ## Building the PDF

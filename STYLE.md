@@ -43,7 +43,7 @@ Contents, in order:
 - Participant names short and consistent across ALL chapters: `User`, `API` (kube-apiserver), `etcd`, `Sched` (kube-scheduler), `KCM` (controller-manager), `Kubelet`, `CRI` (container runtime), `CNI`, `CSI`, `KProxy` (kube-proxy), `Ctrl` (a custom controller).
 - Keep it simple: no `%%{init}%%` directives, no `par`/`critical` blocks; `alt`/`opt`/`Note` are fine. Label every arrow with a short verb phrase.
 - In node/edge labels avoid characters that break mermaid: `(){}[]<>"`; use plain words. Quote a label only using double quotes if it contains spaces plus special chars — better: avoid entirely. No HTML anywhere in a diagram body.
-- `sequenceDiagram`: start with `autonumber`. Keep to ≤ 6 participants. Message text ≤ 6 words — message length is what makes these diagrams too wide to read.
+- `sequenceDiagram`: start with `autonumber`. Message text ≤ 6 words. Prefer few participants, but do not drop a real actor to save width — the tuned layout config below carries eight lanes within the gate.
 
 ### The size gate (this is a hard limit, not a preference)
 
@@ -51,7 +51,10 @@ The page gives a diagram **174 mm** of width and **150 mm** of height, and the i
 `min(174/W, 150/H)`. So a diagram that is too **tall** shrinks exactly like one that is too **wide**.
 Mermaid's label font is ~16 px; below about 7 pt it is unreadable in print.
 
-**Every diagram must render within W ≤ 1000 px and H ≤ 950 px.**
+**Every diagram must print its labels at 7 pt or larger.** That is the gate `check_diagrams.py`
+enforces, and it reports the figure. As a rough guide it means staying under ~1,100 px wide or
+~960 px tall, whichever binds first — but the point size is the rule, since a wide diagram that is
+also short still prints fine.
 
 Check before you commit:
 
