@@ -3,7 +3,7 @@
 **Kubernetes Internals Interview Worksheet** — a flow-first prep guide for senior and staff-level interviews on Kubernetes internals.
 It is built around 27 end-to-end "what happens when…" flows, each traced step by step from the command you type to the container that runs, with a diagram and the ways it fails in production.
 Around those flows sit ~90 tiered interview questions with model answers, and three find-the-bug controller-runtime exercises.
-Content baseline is Kubernetes v1.36; the whole thing builds to a ~108-page PDF.
+Content baseline is Kubernetes v1.36; the whole thing builds to a ~113-page PDF.
 
 ## Chapters
 
