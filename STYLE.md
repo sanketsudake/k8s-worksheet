@@ -134,11 +134,11 @@ Number questions `N.M` per chapter (chapter.number, continuous across tiers). Pe
 
 ## Length budgets (hard-ish)
 
-- Ch 1: ~1,400 words · Ch 2: ~2,400 · Ch 3: ~1,700 · Ch 4: ~2,200
-- Ch 5: ~2,400 · Ch 6: ~2,800 (incl. code exercises)
-- Ch 7: ~2,400 · Ch 8: ~1,900 · Ch 9: ~1,900
-- Ch 10: ~2,600 · Appendices: ~1,600
-- Over budget → cut noise, not flows. Diagrams don't count against words.
+- Ch 1: ~1,900 words · Ch 2: ~3,500 · Ch 3: ~2,600 · Ch 4: ~4,700
+- Ch 5: ~3,800 · Ch 6: ~3,900 · Ch 7: ~3,000 · Ch 8: ~2,400
+- Ch 9: ~2,400 · Ch 10: ~3,900 · Appendices: ~2,300
+- Counting rule: `sed '/^```/,/^```/d' chapters/chNN.md | wc -w` — fenced blocks (diagrams and code) do not count.
+- Over budget → cut noise, not flows. (Budgets reset Aug 2026 to the shipped book plus ~5% headroom; the original targets had drifted ~30–95% under reality, which made the contract unenforceable.)
 
 ## Code-reading exercises (Chapter 6 only)
 
