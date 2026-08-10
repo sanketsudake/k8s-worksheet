@@ -38,34 +38,34 @@ Flow 8 is the master flow: other chapters zoom into their segment of it and say 
 **[Chapter 5 — Controller Fundamentals](chapters/ch05.md)**
 
 15. [What happens when you edit or scale a Deployment](chapters/ch05.md#flow-15-what-happens-when-you-edit-or-scale-a-deployment)
-16. [What happens when you delete an object that owns others](chapters/ch05.md#flow-16-what-happens-when-you-delete-an-object-that-owns-others)
+17. [What happens when you delete an object that owns others](chapters/ch05.md#flow-17-what-happens-when-you-delete-an-object-that-owns-others)
 
 **[Chapter 6 — Writing Controllers Well](chapters/ch06.md)**
 
-17. [What happens when one reconcile runs, end to end](chapters/ch06.md#flow-17-what-happens-when-one-reconcile-runs-end-to-end)
-18. [What happens when a controller pod restarts](chapters/ch06.md#flow-18-what-happens-when-a-controller-pod-restarts)
-19. [What happens when leader election hands over](chapters/ch06.md#flow-19-what-happens-when-leader-election-hands-over)
+18. [What happens when one reconcile runs, end to end](chapters/ch06.md#flow-18-what-happens-when-one-reconcile-runs-end-to-end)
+19. [What happens when a controller pod restarts](chapters/ch06.md#flow-19-what-happens-when-a-controller-pod-restarts)
+20. [What happens when leader election hands over](chapters/ch06.md#flow-20-what-happens-when-leader-election-hands-over)
 
 ## Part C — Standards & extension interfaces
 
 **[Chapter 7 — Networking & CNI](chapters/ch07.md)**
 
-20. [What happens when a pod gets its network (CNI ADD)](chapters/ch07.md#flow-20-what-happens-when-a-pod-gets-its-network-cni-add)
-21. [What happens when a pod sends a request to a ClusterIP Service](chapters/ch07.md#flow-21-what-happens-when-a-pod-sends-a-request-to-a-clusterip-service)
-22. [What happens when a pod becomes Ready (endpoint propagation)](chapters/ch07.md#flow-22-what-happens-when-a-pod-becomes-ready-endpoint-propagation)
+21. [What happens when a pod gets its network (CNI ADD)](chapters/ch07.md#flow-21-what-happens-when-a-pod-gets-its-network-cni-add)
+22. [What happens when a pod sends a request to a ClusterIP Service](chapters/ch07.md#flow-22-what-happens-when-a-pod-sends-a-request-to-a-clusterip-service)
+23. [What happens when a pod becomes Ready (endpoint propagation)](chapters/ch07.md#flow-23-what-happens-when-a-pod-becomes-ready-endpoint-propagation)
 
 **[Chapter 8 — Storage & CSI](chapters/ch08.md)**
 
-23. [What happens when a PVC is created and a pod uses it](chapters/ch08.md#flow-23-what-happens-when-a-pvc-is-created-and-a-pod-uses-it)
-24. [What happens when a pod with a volume moves to another node](chapters/ch08.md#flow-24-what-happens-when-a-pod-with-a-volume-moves-to-another-node)
+24. [What happens when a PVC is created and a pod uses it](chapters/ch08.md#flow-24-what-happens-when-a-pvc-is-created-and-a-pod-uses-it)
+25. [What happens when a pod with a volume moves to another node](chapters/ch08.md#flow-25-what-happens-when-a-pod-with-a-volume-moves-to-another-node)
 
 **[Chapter 9 — Runtime & Device Standards: CRI, Device Plugins, DRA](chapters/ch09.md)**
 
-25. [What happens when a pod requests a GPU via DRA](chapters/ch09.md#flow-25-what-happens-when-a-pod-requests-a-gpu-via-dra)
+26. [What happens when a pod requests a GPU via DRA](chapters/ch09.md#flow-26-what-happens-when-a-pod-requests-a-gpu-via-dra)
 
 ## Part D — Operating at scale
 
 **[Chapter 10 — Scalability, Resiliency & System Design](chapters/ch10.md)**
 
-26. [What happens when the control plane is down](chapters/ch10.md#flow-26-what-happens-when-the-control-plane-is-down)
-27. [What happens when etcd loses quorum](chapters/ch10.md#flow-27-what-happens-when-etcd-loses-quorum)
+27. [What happens when the control plane is down](chapters/ch10.md#flow-27-what-happens-when-the-control-plane-is-down)
+28. [What happens when etcd loses quorum](chapters/ch10.md#flow-28-what-happens-when-etcd-loses-quorum)

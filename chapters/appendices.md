@@ -68,7 +68,7 @@ The default limiter takes the slower of the two. Per-item backoff resets on `For
 | Node lease renew interval | 10 s | Kubelet heartbeat |
 | `node-monitor-grace-period` | 50 s | Missed heartbeats before NotReady |
 | Default NoExecute toleration | 300 s | Time pods stay on an unreachable node before eviction (Flow 12) |
-| Leader election (lease / renew / retry) | 15 s / 10 s / 2 s | Standard controller leader-election timings (Flow 19) |
+| Leader election (lease / renew / retry) | 15 s / 10 s / 2 s | Standard controller leader-election timings (Flow 20) |
 
 ## Appendix B — Glossary
 
