@@ -32,4 +32,4 @@ Facts added for the coverage-additions pass (verified Aug 2026):
 
 Writing rule: give the version only when it matters for correctness or is likely to come up in interview ("GA since v1.34"), otherwise describe behavior as current. Never describe alpha features as default behavior.
 
-Sources: kubernetes.io release blogs for v1.34 (2025-08-27), v1.35 (2025-12-17), v1.36 (2026-04-22); kubernetes.io DRA updates posts (v1.33, v1.34); nftables kube-proxy blog (2025-02).
+Sources: kubernetes.io release blogs for v1.34 (2025-08-27), v1.35 (2025-12-17), v1.36 (2026-04-22); kubernetes.io DRA updates posts (v1.33, v1.34); nftables kube-proxy blog (2025-02). For the coverage-additions facts (verified 2026-08): kubernetes.io HPA walkthrough and algorithm docs, releases/version-skew-policy, cron-jobs concepts page, security/service-accounts, configure-pod-configmap tasks page.
