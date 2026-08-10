@@ -1,4 +1,4 @@
-# The 27 flows
+# The 28 flows
 
 Every flow traces one event end to end, from the command you type to the container that runs.
 Each has numbered steps, a diagram, and the ways it fails in production.
@@ -38,6 +38,7 @@ Flow 8 is the master flow: other chapters zoom into their segment of it and say 
 **[Chapter 5 — Controller Fundamentals](chapters/ch05.md)**
 
 15. [What happens when you edit or scale a Deployment](chapters/ch05.md#flow-15-what-happens-when-you-edit-or-scale-a-deployment)
+16. [What happens when the HPA scales a Deployment](chapters/ch05.md#flow-16-what-happens-when-the-hpa-scales-a-deployment)
 17. [What happens when you delete an object that owns others](chapters/ch05.md#flow-17-what-happens-when-you-delete-an-object-that-owns-others)
 
 **[Chapter 6 — Writing Controllers Well](chapters/ch06.md)**
