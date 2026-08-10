@@ -88,7 +88,7 @@ The default limiter takes the slower of the two. Per-item backoff resets on `For
 - **DeltaFIFO** — the informer's internal queue of object changes between the reflector and the cache.
 - **EndpointSlice** — a chunk of a Service's backend addresses; sliced to keep watch updates small.
 - **etcd** — the consistent key-value store holding all cluster state; raft-replicated.
-- **Eviction** — removing a pod from a node, either by node pressure (kubelet) or the eviction API (voluntary).
+- **Eviction** — removing a pod from a node: by node pressure (kubelet), by the eviction API (voluntary), or by taint-based deletion from the taint-eviction controller.
 - **Finalizer** — a marker on an object that blocks its deletion until a controller removes the marker.
 - **Gateway API** — the successor to Ingress for traffic routing; Ingress is frozen, not removed.
 - **Garbage collection (GC)** — deletion of objects whose owners (via ownerReferences) are gone.
@@ -143,7 +143,7 @@ The strong answer names the actor, corrects the scope, contrasts the neighboring
 
 - Kubernetes concepts: https://kubernetes.io/docs/concepts/ — architecture, workloads, and the controller model.
 - Reference section: https://kubernetes.io/docs/reference/ — API conventions and the "API Concepts" page (resourceVersion semantics, watches, SSA).
-- Large-cluster considerations and scalability thresholds: https://kubernetes.io/docs/setup/best-practices/
+- Large-cluster considerations and scalability thresholds: https://kubernetes.io/docs/setup/best-practices/cluster-large/
 - etcd documentation: https://etcd.io/docs/ — raft, quotas, maintenance (compaction, defrag, snapshot restore).
 
 **Load-bearing KEPs** (browse by number at https://github.com/kubernetes/enhancements)

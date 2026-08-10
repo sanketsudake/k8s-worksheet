@@ -10,7 +10,7 @@ Facts to state correctly (with the version where they became true):
 - **In-place pod resize (resize CPU/memory without restart): GA in v1.35.** Pod-level resources: beta (v1.34→beta, still maturing in v1.36).
 - **Server-Side Apply**: GA since v1.22 — safe to describe as the standard mechanism.
 - **API Priority and Fairness (APF)**: GA since v1.29.
-- **ValidatingAdmissionPolicy (CEL, in-process admission)**: GA since v1.30; **MutatingAdmissionPolicy** newer (beta ~v1.34+). Webhooks remain widely used.
+- **ValidatingAdmissionPolicy (CEL, in-process admission)**: GA since v1.30; **MutatingAdmissionPolicy: GA in v1.36** (beta since ~v1.34). Webhooks remain widely used.
 - **Gateway API**: standard channel mature; **v1.5 (2026): TCPRoute and UDPRoute moved to Standard**. Position Gateway API as the successor to Ingress (Ingress is frozen, not removed).
 - **User namespaces: GA in v1.36.**
 - **Declarative validation for K8s APIs: GA in v1.36** (internal API-machinery improvement — mention only if useful).
