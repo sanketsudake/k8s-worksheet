@@ -1,6 +1,6 @@
 # STYLE.md — rules every chapter must follow
 
-**What this document is:** the contract for writing chapters of the "Kubernetes Internals Interview Worksheet". Follow it exactly so all chapters read as one book.
+**What this document is:** the contract for writing chapters of the "Kubernetes Internals Worksheet". Follow it exactly so all chapters read as one book.
 
 ## Audience and voice
 
