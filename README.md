@@ -1,6 +1,12 @@
 # k8s-worksheet
 
+[![Kubernetes Internals Worksheet](.github/book-card.png)](https://ssudake.com/books/k8s-worksheet/)
+
 **Kubernetes Internals Worksheet** — a flow-first prep guide for senior, staff, and principal-level interviews on Kubernetes internals.
+
+[![Latest release](https://img.shields.io/github/v/release/sanketsudake/k8s-worksheet)](https://github.com/sanketsudake/k8s-worksheet/releases/latest)
+[![PDF downloads](https://img.shields.io/github/downloads/sanketsudake/k8s-worksheet/total?label=PDF%20downloads)](https://github.com/sanketsudake/k8s-worksheet/releases)
+[![License](https://img.shields.io/github/license/sanketsudake/k8s-worksheet)](LICENSE)
 
 **[Read online](https://ssudake.com/books/k8s-worksheet/)** · **[Download the PDF](https://github.com/sanketsudake/k8s-worksheet/releases/latest/download/kubernetes-internals-worksheet.pdf)** · [all releases](https://github.com/sanketsudake/k8s-worksheet/releases)
 
@@ -37,6 +43,8 @@
 
 - [Appendices](chapters/appendices.md)
 - [The 30 flows](FLOWS.md)
+
+If the worksheet helps your prep, a ⭐ helps others find it — and watching releases gets you new chapters as they land.
 
 ## Contributing
 
