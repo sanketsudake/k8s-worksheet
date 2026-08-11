@@ -108,9 +108,9 @@ for part_title, files in PARTS:
         html = md2html(text)
         html = re.sub(r"<h3>Flow (\d+): (.*?)</h3>", flow_sub, html)
         if fn == "appendices.md":
-            html = re.sub(r"<h2>(Appendix [A-D][^<]*)</h2>",
+            html = re.sub(r"<h2>(Appendix [A-E][^<]*)</h2>",
                           lambda mm: f'<h2 class="chapter-title appendix" id="{slug(mm.group(1)[:10])}">{mm.group(1)}</h2>', html)
-            for mm in re.finditer(r'id="(appendix-[a-d])">([^<]+)<', html):
+            for mm in re.finditer(r'id="(appendix-[a-e])">([^<]+)<', html):
                 toc_entries.append((0, mm.group(2), mm.group(1)))
             body_parts.append(f'<section class="chapter">{html}</section>')
         else:
