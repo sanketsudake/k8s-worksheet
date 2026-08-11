@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the Kubernetes Internals Interview Worksheet PDF.
+"""Build the Kubernetes Internals Worksheet PDF.
 
 Usage:  python3 build/build.py
 Output: dist/kubernetes-internals-worksheet.pdf
