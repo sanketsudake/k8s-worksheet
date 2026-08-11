@@ -160,8 +160,11 @@ What interviewers listen for, by tier:
 | 1 — Explain | Mechanism accuracy | Correct sequence, correct *acting component* per step ("the kubelet restarts it", not "Kubernetes restarts it") | Vague agents ("the system"), wrong order, folklore |
 | 2 — Reason | Trade-off awareness | Explains *why* the design, what breaks under the alternative, names the cost being paid | Restates the mechanism; "because it's better" |
 | 3 — Design/Debug | Failure-mode and scale instincts | Asks clarifying questions, bisects systematically, sizes things (objects × bytes, qps), states blast radius and recovery | Jumps to one tool, ignores scale numbers, no failure story |
+| 4 — Judge (principal+) | Consequence, economics, strategy | Frames the org and fleet consequence, names assumptions and kill-criteria, argues the strongest counter-position before committing, cites history ("we tried X, it failed because…") | Mechanism-perfect but consequence-free; "it depends" with no decision; trend name-dropping without a position |
 
 Five signals that run across all tiers: (1) mechanism accuracy; (2) naming the acting component; (3) trade-off awareness; (4) failure-mode instincts — unprompted "and if that's down…"; (5) scale instincts — unprompted "and at 10k objects…".
+
+Two more mark principal-level answers — and a staff candidate who shows them signals the next rung: (6) economic framing — cost, people, and risk enter the answer unprompted; (7) kill-criteria — the answer states what evidence would change the recommendation.
 
 **Weak vs strong, same question** — "What happens when a liveness probe fails?"
 
@@ -169,7 +172,9 @@ Five signals that run across all tiers: (1) mechanism accuracy; (2) naming the a
 
 *Strong:* "The kubelet — probes are local, the control plane isn't involved — kills that container and restarts it in place per restartPolicy, with backoff. The pod stays on the node; nothing is rescheduled. If I wanted traffic removed instead, that's the readiness probe updating EndpointSlices. Mixing the two causes restart storms during dependency outages."
 
-The strong answer names the actor, corrects the scope, contrasts the neighboring mechanism, and volunteers the failure mode.
+*Principal:* everything in the strong answer, then the unit of impact changes: "At fleet scale I don't rely on every team knowing this. One dependency-checking liveness probe pattern can restart-storm an entire tier, so the platform bans that shape by admission policy and makes the right probe the paved-road default. The mechanism is table stakes — the job is making the mistake impossible."
+
+The strong answer names the actor, corrects the scope, contrasts the neighboring mechanism, and volunteers the failure mode. The principal answer keeps all of that and moves the blast radius from one pod to every team's pods — then does something about it.
 
 ## Appendix D — Further reading
 
