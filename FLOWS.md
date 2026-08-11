@@ -3,7 +3,7 @@
 Every flow traces one event end to end — from the command you type to the container that runs, and in Part E, across a whole fleet of clusters.
 Each has numbered steps, a diagram, and the ways it fails in production.
 
-Flow 8 is the master flow: other chapters zoom into their segment of it and say so.
+Flow 8 is the master flow: other chapters in Parts A–D zoom into their segment of it and say so; Part E's flows run above it, across clusters.
 
 ## Part A — Foundations & control plane internals
 
