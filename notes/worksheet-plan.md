@@ -1,5 +1,7 @@
 # Plan: Kubernetes Internals Interview Worksheet
 
+> Historical planning document. The flow catalog in Section 3 is superseded by FLOWS.md (28 flows as of Aug 2026 — the HPA flow was added as Flow 16).
+
 **Goal:** A comprehensive (~40–60 page), PDF-exportable worksheet that helps candidates prepare for senior/staff-level interviews on Kubernetes, its internals, controllers, and the surrounding standards (CNI, CSI, CRI, DRA, Gateway API, etc.).
 
 **Audience:** Senior / Staff engineers. Style: simple technical English, diagram-heavy, questions with detailed model answers, mostly conceptual with some code-reading exercises.

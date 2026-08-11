@@ -10,12 +10,12 @@ chapters/     One markdown file per chapter — this is the content you edit
   ch02.md     API server & etcd internals       (Flows 2-4)
   ch03.md     Scheduler internals               (Flows 5-7)
   ch04.md     Kubelet, pods & the node          (Flows 8-14, incl. master Flow 8)
-  ch05.md     Controller fundamentals           (Flows 15-16)
-  ch06.md     Writing controllers well          (Flows 17-19 + code exercises)
-  ch07.md     Networking & CNI                  (Flows 20-22)
-  ch08.md     Storage & CSI                     (Flows 23-24)
-  ch09.md     CRI, device plugins & DRA         (Flow 25 + extension map)
-  ch10.md     Scalability, resiliency & design  (Flows 26-27)
+  ch05.md     Controller fundamentals           (Flows 15-17)
+  ch06.md     Writing controllers well          (Flows 18-20 + code exercises)
+  ch07.md     Networking & CNI                  (Flows 21-23)
+  ch08.md     Storage & CSI                     (Flows 24-25)
+  ch09.md     CRI, device plugins & DRA         (Flow 26 + extension map)
+  ch10.md     Scalability, resiliency & design  (Flows 27-28)
   appendices.md  Quick-reference tables, glossary, rubric, further reading
 STYLE.md      The writing contract — read before editing any chapter
 notes/        Research notes (version facts) and the original plan

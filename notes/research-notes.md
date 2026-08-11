@@ -22,6 +22,14 @@ Facts to state correctly (with the version where they became true):
 - **cgroup v2** is the assumed node baseline (v1 deprecated); memory QoS work ongoing.
 - etcd: v3 API, revisions/watch/lease model; watch cache in API server serves most watches.
 
+Facts added for the coverage-additions pass (verified Aug 2026):
+
+- **HPA defaults**: control loop every 15s (`--horizontal-pod-autoscaler-sync-period`); tolerance 0.1 (no scale when current/target is within 10% of 1); downscale stabilization window 300s, upscale 0s; per-HPA `behavior` policies override these; per-HPA configurable tolerance is alpha since v1.33 — do not present as default. Formula: `desired = ceil(current × currentMetric/targetMetric)`; HPA writes only the scale subresource.
+- **Version skew**: kubelet may be up to **3 minor versions older** than kube-apiserver (since kubelet v1.25; never newer). KCM/scheduler/CCM: not newer than the API server, up to 1 minor older. HA API servers: within 1 minor of each other. kubectl: ±1 minor. Upgrade order: etcd → kube-apiserver → KCM/scheduler → kubelet.
+- **ServiceAccount tokens**: projected, audience- and pod-bound tokens via the TokenRequest API; default lifetime 1h, kubelet refreshes before expiry. Auto-created Secret-based tokens are gone since v1.24 (LegacyServiceAccountTokenNoAutoGeneration).
+- **CronJob**: with no `startingDeadlineSeconds`, >100 missed schedules since the last run stops the controller from starting jobs ("too many missed start time"); `startingDeadlineSeconds` bounds the counting window. `concurrencyPolicy`: Allow (default) / Forbid / Replace; Forbid skips count as missed. `timeZone` field is GA.
+- **ConfigMap/Secret propagation**: mounted values refresh on the kubelet sync period (default 1 min) plus cache TTL — up to ~2 min of lag; `subPath` mounts never update; env vars never update (restart needed); immutable ConfigMaps/Secrets close the kubelet's watches and refuse edits.
+
 Writing rule: give the version only when it matters for correctness or is likely to come up in interview ("GA since v1.34"), otherwise describe behavior as current. Never describe alpha features as default behavior.
 
-Sources: kubernetes.io release blogs for v1.34 (2025-08-27), v1.35 (2025-12-17), v1.36 (2026-04-22); kubernetes.io DRA updates posts (v1.33, v1.34); nftables kube-proxy blog (2025-02).
+Sources: kubernetes.io release blogs for v1.34 (2025-08-27), v1.35 (2025-12-17), v1.36 (2026-04-22); kubernetes.io DRA updates posts (v1.33, v1.34); nftables kube-proxy blog (2025-02). For the coverage-additions facts (verified 2026-08): kubernetes.io HPA walkthrough and algorithm docs, releases/version-skew-policy, cron-jobs concepts page, security/service-accounts, configure-pod-configmap tasks page.

@@ -68,7 +68,30 @@ The default limiter takes the slower of the two. Per-item backoff resets on `For
 | Node lease renew interval | 10 s | Kubelet heartbeat |
 | `node-monitor-grace-period` | 50 s | Missed heartbeats before NotReady |
 | Default NoExecute toleration | 300 s | Time pods stay on an unreachable node before eviction (Flow 12) |
-| Leader election (lease / renew / retry) | 15 s / 10 s / 2 s | Standard controller leader-election timings (Flow 19) |
+| Leader election (lease / renew / retry) | 15 s / 10 s / 2 s | Standard controller leader-election timings (Flow 20) |
+
+### Rollout math (maxSurge / maxUnavailable)
+
+| Field | Rounding | 10 replicas at the 25% default |
+|---|---|---|
+| `maxSurge` | Rounds **up** | 3 extra — up to 13 pods |
+| `maxUnavailable` | Rounds **down** | 2 — at least 8 available |
+
+The rounding directions are safety-biased: never less capacity than the percentage promises (Flow 15).
+
+### Common container exit codes
+
+| Code | Meaning | Usual cause |
+|---|---|---|
+| 0 | Clean exit | Completed (Jobs) or intentional stop |
+| 1 | Application error | Unhandled failure in the app |
+| 137 | SIGKILL (128+9) | OOM-kill, or grace period expired (Flows 9, 14) |
+| 139 | SIGSEGV (128+11) | Segfault |
+| 143 | SIGTERM (128+15) | Graceful stop honored (Flow 9) |
+
+### Failure modes at a glance
+
+The failure-mode matrix — which component going down breaks what — lives in Chapter 10 and is the best last-hour review table in the book; read it together with Flows 27 and 28.
 
 ## Appendix B — Glossary
 
@@ -76,6 +99,8 @@ The default limiter takes the slower of the two. Per-item backoff resets on `For
 - **APF (API Priority and Fairness)** — API server mechanism that queues and fair-shares requests per flow so no client starves the rest.
 - **Aggregated API** — a separate API server mounted under the main one, serving extra APIs (e.g. metrics).
 - **Binding** — the API write that sets a pod's `nodeName`; the scheduler's actual output.
+- **Bookmark** — a watch event that only advances the client's resourceVersion, keeping a resumed watch cheap.
+- **CDI (Container Device Interface)** — the spec format a device driver hands the runtime to inject device nodes, mounts, and env into a container.
 - **CNI (Container Network Interface)** — the binary contract the runtime invokes to wire a pod into the network.
 - **Condition** — a typed status entry (`type`, `status`, `reason`) reporting one aspect of an object's state.
 - **Conntrack** — the kernel's connection-tracking table; remembers NAT decisions per flow.
@@ -86,9 +111,11 @@ The default limiter takes the slower of the two. Per-item backoff resets on `For
 - **CSI (Container Storage Interface)** — the gRPC contract storage drivers implement for provisioning and mounting volumes.
 - **DRA (Dynamic Resource Allocation)** — the claim-based API (GA since v1.34) for allocating devices like GPUs.
 - **DeltaFIFO** — the informer's internal queue of object changes between the reflector and the cache.
+- **DeviceClass** — the DRA object an admin curates to preselect devices; the StorageClass analog.
 - **EndpointSlice** — a chunk of a Service's backend addresses; sliced to keep watch updates small.
 - **etcd** — the consistent key-value store holding all cluster state; raft-replicated.
 - **Eviction** — removing a pod from a node: by node pressure (kubelet), by the eviction API (voluntary), or by taint-based deletion from the taint-eviction controller.
+- **Expectations pattern** — a controller's in-memory note of writes it just made, so a lagging cache doesn't cause duplicates.
 - **Finalizer** — a marker on an object that blocks its deletion until a controller removes the marker.
 - **Gateway API** — the successor to Ingress for traffic routing; Ingress is frozen, not removed.
 - **Garbage collection (GC)** — deletion of objects whose owners (via ownerReferences) are gone.
@@ -100,21 +127,28 @@ The default limiter takes the slower of the two. Per-item backoff resets on `For
 - **Lease** — a small object renewed periodically to signal liveness (node heartbeats, leader election).
 - **Level-triggered** — reacting to observed state, not to individual events; missed events don't matter.
 - **Lister** — a read interface over an informer's cache; no API calls.
+- **nominatedNodeName** — the pod status field marking where preemption freed room; a hint, not a reservation.
 - **OwnerReference** — a pointer from a child object to its parent, driving cascading deletion.
 - **PDB (PodDisruptionBudget)** — a floor on ready pods that voluntary evictions must respect.
+- **PLEG (pod lifecycle event generator)** — the kubelet part that watches the runtime for container state changes and feeds the sync loop.
 - **Preemption** — the scheduler evicting lower-priority pods to make room for a pending one.
 - **Quorum** — the majority of etcd members required to commit writes.
 - **Reconcile** — one run of a controller's logic for one object: observe, diff, act.
 - **Reflector** — the informer part that performs the LIST and WATCH against the API server.
+- **ResourceClaim** — the DRA object requesting a device for a pod; the PVC analog.
+- **ResourceSlice** — the DRA object where a driver publishes device inventory the scheduler allocates from.
 - **resourceVersion** — the change counter on every object; powers optimistic concurrency and watch resumption.
 - **Resync** — periodic replay of the informer cache into handlers; not a re-LIST.
+- **RuntimeClass** — the object selecting which runtime handler (runc, gVisor, Kata) runs a pod's sandbox.
 - **Sandbox** — the pod's shared environment (network namespace, cgroup parent) created before containers.
 - **Server-Side Apply (SSA)** — declarative PATCH where the API server merges fields and tracks per-field ownership.
 - **Sidecar container** — an init container with `restartPolicy: Always`; runs alongside app containers (stable v1.33).
 - **Static pod** — a pod run by the kubelet from a local file, independent of the API server.
 - **Taint / toleration** — node-side repellent and pod-side exemption controlling placement and eviction.
 - **Topology spread constraint** — a rule spreading replicas across zones or nodes.
+- **VolumeAttachment** — the object recording that a volume is attached to a node; driven by the attach-detach controller.
 - **Watch** — a streaming API request delivering object changes as events.
+- **Watch cache** — the API server's per-resource in-memory cache that fans one etcd watch out to all clients.
 - **Workqueue** — the rate-limited, deduplicating queue between informer events and reconciles.
 
 ## Appendix C — Answer-quality rubric

@@ -125,7 +125,7 @@ for level, title, anchor in toc_entries:
     cls = "toc-part" if level == 0 else "toc-ch"
     toc_html.append(f'<li class="{cls}"><a href="#{anchor}"><span class="t">{title}</span><span class="pg"></span></a></li>')
 toc_html.append("</ul>")
-toc_html.append('<h2 class="toc-h">The 27 flows</h2><ul class="toc flows">')
+toc_html.append('<h2 class="toc-h">The 28 flows</h2><ul class="toc flows">')
 for num, title, anchor in sorted(flow_entries):
     toc_html.append(f'<li class="toc-flow"><a href="#{anchor}"><span class="t"><b>{num}.</b> {title}</span><span class="pg"></span></a></li>')
 toc_html.append("</ul></div>")
