@@ -2,7 +2,7 @@
 
 **Kubernetes Internals Worksheet** — a flow-first prep guide for senior, staff, and principal-level interviews on Kubernetes internals.
 
-**[Download the PDF](https://github.com/sanketsudake/k8s-worksheet/releases/latest/download/kubernetes-internals-worksheet.pdf)** · [all releases](https://github.com/sanketsudake/k8s-worksheet/releases)
+**[Read online](https://ssudake.com/books/k8s-worksheet/)** · **[Download the PDF](https://github.com/sanketsudake/k8s-worksheet/releases/latest/download/kubernetes-internals-worksheet.pdf)** · [all releases](https://github.com/sanketsudake/k8s-worksheet/releases)
 
 ## Chapters
 
