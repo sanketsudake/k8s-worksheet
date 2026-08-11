@@ -16,6 +16,8 @@ chapters/     One markdown file per chapter — this is the content you edit
   ch08.md     Storage & CSI                     (Flows 24-25)
   ch09.md     CRI, device plugins & DRA         (Flow 26 + extension map)
   ch10.md     Scalability, resiliency & design  (Flows 27-28)
+  ch11.md     Fleet, platform & economics       (Flows 29-30, Part E judgment format)
+  ch12.md     Design judgment & capstones       (Part E judgment format, no flows)
   appendices.md  Quick-reference tables, glossary, rubric, principal's lens, further reading
 STYLE.md      The writing contract — read before editing any chapter
 notes/        Research notes (version facts) and the original plan

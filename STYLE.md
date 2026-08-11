@@ -150,7 +150,7 @@ Diagrams are optional in Part E; every mermaid rule applies when one appears.
 
 - Ch 1: ~1,900 words · Ch 2: ~3,500 · Ch 3: ~2,600 · Ch 4: ~4,700
 - Ch 5: ~3,800 · Ch 6: ~3,900 · Ch 7: ~3,000 · Ch 8: ~2,400
-- Ch 9: ~2,400 · Ch 10: ~3,900 · Ch 11: ~2,900 · Ch 12: ~2,500 · Appendices: ~3,900
+- Ch 9: ~2,400 · Ch 10: ~3,900 · Ch 11: ~3,200 · Ch 12: ~3,000 · Appendices: ~3,900
 - Counting rule: `sed '/^```/,/^```/d' chapters/chNN.md | wc -w` — fenced blocks (diagrams and code) do not count.
 - Over budget → cut noise, not flows. (Budgets reset Aug 2026 to the shipped book plus ~5% headroom; the original targets had drifted ~30–95% under reality, which made the contract unenforceable.)
 
