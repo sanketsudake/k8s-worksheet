@@ -1,9 +1,9 @@
-# The 28 flows
+# The 30 flows
 
-Every flow traces one event end to end, from the command you type to the container that runs.
+Every flow traces one event end to end — from the command you type to the container that runs, and in Part E, across a whole fleet of clusters.
 Each has numbered steps, a diagram, and the ways it fails in production.
 
-Flow 8 is the master flow: other chapters zoom into their segment of it and say so.
+Flow 8 is the master flow: other chapters in Parts A–D zoom into their segment of it and say so; Part E's flows run above it, across clusters.
 
 ## Part A — Foundations & control plane internals
 
@@ -70,3 +70,10 @@ Flow 8 is the master flow: other chapters zoom into their segment of it and say 
 
 27. [What happens when the control plane is down](chapters/ch10.md#flow-27-what-happens-when-the-control-plane-is-down)
 28. [What happens when etcd loses quorum](chapters/ch10.md#flow-28-what-happens-when-etcd-loses-quorum)
+
+## Part E — Judgment at principal scale
+
+**[Chapter 11 — Fleet, Platform & Economics](chapters/ch11.md)**
+
+29. [What happens when a fleet-wide config change rolls out](chapters/ch11.md#flow-29-what-happens-when-a-fleet-wide-config-change-rolls-out)
+30. [What happens when a breaking CRD change ships across the fleet](chapters/ch11.md#flow-30-what-happens-when-a-breaking-crd-change-ships-across-the-fleet)

@@ -1,6 +1,6 @@
 # k8s-worksheet
 
-**Kubernetes Internals Interview Worksheet** — a flow-first prep guide for senior and staff-level interviews on Kubernetes internals.
+**Kubernetes Internals Interview Worksheet** — a flow-first prep guide for senior, staff, and principal-level interviews on Kubernetes internals.
 
 **[Download the PDF](https://github.com/sanketsudake/k8s-worksheet/releases/latest/download/kubernetes-internals-worksheet.pdf)** · [all releases](https://github.com/sanketsudake/k8s-worksheet/releases)
 
@@ -28,10 +28,15 @@
 
 - [Chapter 10 — Scalability, Resiliency & System Design](chapters/ch10.md)
 
+**Part E — Judgment at principal scale**
+
+- [Chapter 11 — Fleet, Platform & Economics](chapters/ch11.md)
+- [Chapter 12 — Design Judgment: Lineage, Frontier & Capstones](chapters/ch12.md)
+
 **Reference**
 
 - [Appendices](chapters/appendices.md)
-- [The 28 flows](FLOWS.md)
+- [The 30 flows](FLOWS.md)
 
 ## Contributing
 

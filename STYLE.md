@@ -4,7 +4,7 @@
 
 ## Audience and voice
 
-- Reader: senior/staff engineer preparing for a deep Kubernetes interview.
+- Reader: senior, staff, or principal engineer preparing for a deep Kubernetes interview.
 - Simple technical English. Short sentences (aim ≤ 20 words). One idea per paragraph. Paragraphs ≤ 4 sentences.
 - Define every piece of jargon at first use, in one clause: "the informer (a client-side cache that watches the API server)".
 - High signal, low noise: no filler ("It is important to note that…", "In the world of Kubernetes…"), no marketing tone, no repetition of what another section already said — cross-reference instead ("see Flow 1").
@@ -13,11 +13,11 @@
 
 ## File format
 
-- One markdown file per chapter: `chapters/chNN.md` (`ch01.md` … `ch10.md`, `appendices.md`).
+- One markdown file per chapter: `chapters/chNN.md` (`ch01.md` … `ch12.md`, `appendices.md`).
 - Start with `# Chapter N — Title`. Use `##` for sections, `###` for flows and questions. No deeper nesting.
 - No HTML in the markdown. Tables in GitHub style. Code in fenced blocks with language tag (`yaml`, `go`, `bash`).
 
-## Chapter shape (in this order)
+## Chapter shape (Chapters 1–10, in this order)
 
 1. **Opening ("Why this chapter")** — 3–6 sentences: what the interviewer is probing here and the one mental model to hold.
 2. **Concepts** — the minimum background needed to follow the flows. Keep short; teach details inside the flows.
@@ -113,7 +113,7 @@ fence, on its own line, as plain italic text with no internal `**bold**`.
 
 ## Question format (strict)
 
-Section `## Questions`. Three subsections: `### Tier 1 — Explain`, `### Tier 2 — Reason`, `### Tier 3 — Design & Debug`.
+Section `## Questions`. Chapters 1–10: three subsections `### Tier 1 — Explain`, `### Tier 2 — Reason`, `### Tier 3 — Design & Debug`. Part E chapters (11–12): `### Tier 2 — Reason`, `### Tier 3 — Design & Debug`, `### Tier 4 — Judge` — no Tier 1; mechanism recall belongs to Chapters 1–10.
 
 Each question:
 
@@ -125,18 +125,32 @@ Each question:
 *Strong answers also mention:* one or two things that distinguish a great candidate.
 ```
 
-Number questions `N.M` per chapter (chapter.number, continuous across tiers). Per chapter: 3–4 Tier 1, 3–4 Tier 2, 2–3 Tier 3. Tier 3 questions are scenarios: a symptom to debug or a system to design — the answer walks the reasoning, not just the conclusion.
+Number questions `N.M` per chapter (chapter.number, continuous across tiers). Chapters 1–10: 3–4 Tier 1, 3–4 Tier 2, 2–3 Tier 3. Part E: 3–4 Tier 2, 2–3 Tier 3, 2–3 Tier 4. Tier 3 questions are scenarios: a symptom to debug or a system to design — the answer walks the reasoning, not just the conclusion. Tier 4 questions demand a committed position: the answer names assumptions and kill-criteria, argues the strongest counter-position, then decides (the Appendix C Tier-4 row is the rubric).
+
+## Part E chapters (judgment format)
+
+Chapters 11–12 target principal-level judgment and relax the Chapters 1–10 shape:
+
+1. **Opening ("Why this chapter")** — same as Chapters 1–10.
+2. **Concepts** — may carry most of the chapter.
+3. **Flows** — optional. When present, the strict flow format and all mermaid rules apply unchanged.
+4. **Scenario sections** — `### Scenario: <title>`: a presented architecture or plan in 3–6 sentences, then `**Critique.**` — an 8–15 line model answer naming what is wrong, what is right, and what to ask next.
+5. **Capstone sections** — `### Capstone: <title>`: an exercise prompt, a model artifact or answer, then `**What reviewers look for.**` mapped to the Appendix C Tier-4 row.
+6. **Questions** — Tiers 2/3/4 as above.
+7. **Common mistakes & red flags** — same as Chapters 1–10.
+
+Diagrams are optional in Part E; every mermaid rule applies when one appears.
 
 ## Cross-references
 
 - Refer to flows by global number ("Flow 8"), figures by "Figure 4.2", chapters by "Chapter 5".
-- The master flow is Flow 8 (pod creation → Running, Chapter 4). Other chapters zoom into their segment of it and say so.
+- The master flow is Flow 8 (pod creation → Running, Chapter 4). Other Chapters 1–10 zoom into their segment of it and say so; Part E chapters operate above it, at fleet scale.
 
 ## Length budgets (hard-ish)
 
 - Ch 1: ~1,900 words · Ch 2: ~3,500 · Ch 3: ~2,600 · Ch 4: ~4,700
 - Ch 5: ~3,800 · Ch 6: ~3,900 · Ch 7: ~3,000 · Ch 8: ~2,400
-- Ch 9: ~2,400 · Ch 10: ~3,900 · Appendices: ~2,300
+- Ch 9: ~2,400 · Ch 10: ~3,900 · Ch 11: ~3,200 · Ch 12: ~3,000 · Appendices: ~3,900
 - Counting rule: `sed '/^```/,/^```/d' chapters/chNN.md | wc -w` — fenced blocks (diagrams and code) do not count.
 - Over budget → cut noise, not flows. (Budgets reset Aug 2026 to the shipped book plus ~5% headroom; the original targets had drifted ~30–95% under reality, which made the contract unenforceable.)
 

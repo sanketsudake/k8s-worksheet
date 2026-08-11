@@ -22,6 +22,14 @@ Facts to state correctly (with the version where they became true):
 - **cgroup v2** is the assumed node baseline (v1 deprecated); memory QoS work ongoing.
 - etcd: v3 API, revisions/watch/lease model; watch cache in API server serves most watches.
 
+Facts added for the principal's-lens pass (verified Aug 2026):
+
+- **Service mesh / dataplane direction**: Istio ambient (sidecar-less) mode GA since Istio 1.24 (Nov 2024); by 2026 new mesh deployments default to sidecar-less/eBPF designs, with sidecar proxies persisting for L7-heavy cases. eBPF CNIs are consolidating the kernel dataplane. Sources: istio.io ambient GA; 2026 mesh-state industry coverage.
+- **AI training schedulers**: Slurm-class schedulers still common for large dedicated training fleets (native gang/topology/fabric scheduling); Kubernetes closes the gap via DRA plus queueing/gang layers (Kueue, Volcano — quota/admission and gang scheduling respectively, often layered). HPC-style features are arriving in production Kubernetes through 2026. Treat "who wins training" as an open bet, not a settled fact.
+- **Lineage citations (stable)**: "Large-scale cluster management at Google with Borg" (EuroSys 2015); "Borg, Omega, and Kubernetes" (ACM Queue, 2016).
+- **Frontier project status (for Ch 12)**: Crossplane CNCF **Graduated** (Oct 2025) — the "control plane for everything" pattern is mainstream. SpinKube (WASM workloads on K8s): CNCF Sandbox (Jan 2025), active but early — never present WASM as a default. KCP: active project, multi-tenant Kubernetes-like control planes for platform engineering. Karpenter-class node provisioning: name the pattern, make no version claims. Sources: cncf.io project pages, 2026 KubeCon EU coverage.
+- The when-not-Kubernetes / tenancy / managed-vs-self-hosted content is judgment framing, not version-sensitive fact.
+
 Facts added for the coverage-additions pass (verified Aug 2026):
 
 - **HPA defaults**: control loop every 15s (`--horizontal-pod-autoscaler-sync-period`); tolerance 0.1 (no scale when current/target is within 10% of 1); downscale stabilization window 300s, upscale 0s; per-HPA `behavior` policies override these; per-HPA configurable tolerance is alpha since v1.33 — do not present as default. Formula: `desired = ceil(current × currentMetric/targetMetric)`; HPA writes only the scale subresource.

@@ -160,8 +160,11 @@ What interviewers listen for, by tier:
 | 1 — Explain | Mechanism accuracy | Correct sequence, correct *acting component* per step ("the kubelet restarts it", not "Kubernetes restarts it") | Vague agents ("the system"), wrong order, folklore |
 | 2 — Reason | Trade-off awareness | Explains *why* the design, what breaks under the alternative, names the cost being paid | Restates the mechanism; "because it's better" |
 | 3 — Design/Debug | Failure-mode and scale instincts | Asks clarifying questions, bisects systematically, sizes things (objects × bytes, qps), states blast radius and recovery | Jumps to one tool, ignores scale numbers, no failure story |
+| 4 — Judge (principal+) | Consequence, economics, strategy | Frames the org and fleet consequence, names assumptions and kill-criteria, argues the strongest counter-position before committing, cites history ("we tried X, it failed because…") | Mechanism-perfect but consequence-free; "it depends" with no decision; trend name-dropping without a position |
 
 Five signals that run across all tiers: (1) mechanism accuracy; (2) naming the acting component; (3) trade-off awareness; (4) failure-mode instincts — unprompted "and if that's down…"; (5) scale instincts — unprompted "and at 10k objects…".
+
+Two more mark principal-level answers — and a staff candidate who shows them signals the next rung: (6) economic framing — cost, people, and risk enter the answer unprompted; (7) kill-criteria — the answer states what evidence would change the recommendation.
 
 **Weak vs strong, same question** — "What happens when a liveness probe fails?"
 
@@ -169,9 +172,72 @@ Five signals that run across all tiers: (1) mechanism accuracy; (2) naming the a
 
 *Strong:* "The kubelet — probes are local, the control plane isn't involved — kills that container and restarts it in place per restartPolicy, with backoff. The pod stays on the node; nothing is rescheduled. If I wanted traffic removed instead, that's the readiness probe updating EndpointSlices. Mixing the two causes restart storms during dependency outages."
 
-The strong answer names the actor, corrects the scope, contrasts the neighboring mechanism, and volunteers the failure mode.
+*Principal:* everything in the strong answer, then the unit of impact changes: "At fleet scale I don't rely on every team knowing this. One dependency-checking liveness probe pattern can restart-storm an entire tier, so the platform bans that shape by admission policy and makes the right probe the paved-road default. The mechanism is table stakes — the job is making the mistake impossible."
 
-## Appendix D — Further reading
+The strong answer names the actor, corrects the scope, contrasts the neighboring mechanism, and volunteers the failure mode. The principal answer keeps all of that and moves the blast radius from one pod to every team's pods — then does something about it.
+
+## Appendix D — The principal's lens
+
+Chapters 1–10 teach mechanisms. At principal and distinguished level the interview changes unit: from one cluster to a fleet, from correctness to cost, from "how does it work" to "what should we do". This appendix reframes each subsystem at that altitude, tabulates the recurring bets, and ends with critique prompts to argue out loud. Staff candidates: read it to see the next rung.
+
+### Zoom out, chapter by chapter
+
+- **Architecture (Ch 1).** Hub-and-spoke scales organizations, not just clusters: teams integrate by reading and writing objects, not by meetings. Consequence: the API server is your company's integration bus, and its schemas plus admission rules are de facto company policy — change them like public APIs.
+- **API machinery (Ch 2).** The etcd ceiling is why fleets exist: you do not scale one cluster past its store, you multiply clusters — and inherit config distribution, drift, and upgrade waves. SSA field ownership is a multi-team contract; admission is the governance chokepoint where policy engines enforce compliance on every write.
+- **Scheduling (Ch 3).** Scheduling is bin-packing economics. Requests are a price signal teams game: systematic over-requesting shows up as a "full" cluster at 40% usage, and the fix is incentive design — showback, quotas, right-sizing tools — not a scheduler flag.
+- **The node (Ch 4).** Eviction ranking and QoS are a business-priority statement written in YAML. Decide platform-wide which classes of work die first under pressure; otherwise the defaults decide, and they do not know your revenue path.
+- **Controllers (Ch 5–6).** The controller pattern is an org pattern. A CRD is an API your team supports forever — versioning, conversion, deprecation, every consumer. And many teams' controllers interacting produce emergent behavior nobody owns; someone must own the interaction budget, usually the platform team.
+- **Networking (Ch 7).** The dataplane this book teaches — kube-proxy programming the kernel — is consolidating under eBPF CNIs, and the service-mesh layer above it (outside this book's scope) went sidecar-less (ambient mode GA since late 2024); sidecar proxies persist where heavy L7 policy earns their cost. NetworkPolicy doubles as a compliance artifact: auditors read it.
+- **Storage (Ch 8).** Storage is where cloud lock-in actually lives: compute moves between clusters easily, volumes and their topology do not. Stateful-on-Kubernetes is a per-system judgment — operators made it routine for some databases, free for none.
+- **Runtime and devices (Ch 9).** DRA is the project's bet that Kubernetes wins AI infrastructure. In accelerator fleets, device cost dominates everything else: scheduler efficiency is measured in money, and idle-GPU percentage is a board-level number.
+- **Scale (Ch 10).** Past one cluster's limits you trade a technical problem for an organizational one. Every admission webhook, CRD, and controller you ship now has fleet-wide blast radius — design the staged-rollout system for platform changes before the fleet exists; retrofitting one during an incident is how fleets die.
+
+### The recurring bets
+
+**When Kubernetes is the wrong default**
+
+| Workload shape | Why Kubernetes strains | What wins today | What would change the answer |
+|---|---|---|---|
+| Large-scale ML training | Gang, topology, and fabric scheduling are add-ons (Kueue, Volcano), not defaults | Slurm-class schedulers still run the biggest dedicated training fleets | DRA maturity plus queueing layers closing the gap |
+| A handful of services | A platform team costs more than the product | PaaS or serverless | Fleet growth or compliance requirements |
+| Bursty, event-shaped work | Paying for idle nodes; cold-start fights | Serverless platforms | A sustained baseline load appears |
+| Hard real-time or kernel-bypass | The abstraction is in the way: scheduling jitter, network stack | Bare metal, specialized OS | Rarely changes |
+| Single-purpose edge appliance | A full control plane per site is overhead | k3s-class distributions or plain OS | Fleet management outgrowing the OS |
+
+**Tenancy models**
+
+| Model | Isolation | Cost | Ops load | Blast radius | Fits when |
+|---|---|---|---|---|---|
+| Namespaces + quotas | Soft: shared kernel and control plane | Lowest | One cluster | Control-plane failures hit everyone | Trusted teams, cost-sensitive |
+| Cluster per team | Hard | Highest: control plane and headroom per team | A fleet | Contained per team | Low trust, hard compliance lines |
+| Virtual clusters | Control-plane isolation on shared nodes | Middle | Novel tooling to run | Node-level faults still shared | API isolation without a hardware split |
+
+**Managed vs self-hosted control plane**
+
+| | You own | You give up | Economics | Choose when |
+|---|---|---|---|---|
+| Managed | Workloads and node config | etcd access, upgrade timing, apiserver flags | The fee beats one SRE until the fleet is large | The default answer |
+| Self-hosted | Everything, including etcd tuning and version choice | The provider's guardrails | Pays off at large fleets or special requirements | Compliance, bare metal, deep control-plane needs |
+
+**Multi-cluster patterns**
+
+| Pattern | Coordination | Failure story | Blast radius | Fits when |
+|---|---|---|---|---|
+| Replicated independent clusters | None at runtime; CD applies the same config N times | One cluster dies, the others never notice | Smallest | The default; failover lives above (DNS, global LB) |
+| Hub-spoke controller | A hub cluster reconciles the spokes | Hub outage freezes fleet change; hub compromise is fleet compromise | Largest | Fleet config at scale, with the hub risk priced in |
+| Federated API layer | One API facade over many clusters | The facade is a new SPOF and a version-skew surface | Middle | Rare: genuine multi-cluster scheduling needs |
+
+### Critique prompts
+
+Argue both sides out loud, then commit — expect the follow-up to attack whichever side you take.
+
+1. **"Kubernetes is too complex for 90% of the teams using it."** For: most teams need "run my container, give it a URL" and inherit a distributed system instead. Against: the complexity belongs to the domain — Kubernetes just refuses to hide it, and platforms on top can. A position: both are true at different layers; the real failure is organizational — handing raw Kubernetes to product teams instead of a paved road built on it.
+2. **"etcd was the wrong choice."** For: the ~8 GiB practical ceiling and watch fan-out cap cluster size and forced the fleet era. Against: strict consistency made resourceVersion, watches, and optimistic concurrency simple enough to build an ecosystem on. A position: right choice then; the mistake today is treating one etcd as the unit of scale — cluster sharding is the working answer, sharded list/watch the upstream one.
+3. **"CRDs created an unmaintainable ecosystem."** For: every install drags in third-party APIs with unowned lifecycles; abandoned operators rot clusters. Against: CRDs are why Kubernetes won — the extensibility flywheel produced the ecosystem that made it the default. A position: the flywheel was worth it; the missing half is discipline — own your CRDs like public APIs, audit third-party ones like dependencies.
+4. **"The service-mesh sidecar was a mistake."** For: per-pod proxies taxed every pod's memory and latency, and their lifecycle problems were bad enough that Kubernetes built native sidecar support (Chapter 4). Against: sidecars delivered mesh features a decade before kernels could, with per-pod isolation. A position: right pattern for its decade; L3/L4 belongs in the kernel now (eBPF, ambient), and sidecars retreat to the heavy-L7 cases that still pay their rent.
+5. **"Kubernetes will lose AI training to specialized schedulers."** For: Slurm-class systems still own the biggest training fleets; gang and topology scheduling remain add-ons. Against: DRA is GA, queueing layers are maturing, and "everything else already runs here" is enormous gravity. A position: inference is already Kubernetes'; training converges as DRA and queueing close the gap — bet on convergence, and keep a bridge to the dedicated fleet meanwhile.
+
+## Appendix E — Further reading
 
 **Official docs (stable top-level pages)**
 
@@ -179,6 +245,11 @@ The strong answer names the actor, corrects the scope, contrasts the neighboring
 - Reference section: https://kubernetes.io/docs/reference/ — API conventions and the "API Concepts" page (resourceVersion semantics, watches, SSA).
 - Large-cluster considerations and scalability thresholds: https://kubernetes.io/docs/setup/best-practices/cluster-large/
 - etcd documentation: https://etcd.io/docs/ — raft, quotas, maintenance (compaction, defrag, snapshot restore).
+
+**Lineage papers (read before a distinguished-level loop)**
+
+- "Large-scale cluster management at Google with Borg" (EuroSys 2015) — the system Kubernetes distilled.
+- "Borg, Omega, and Kubernetes" (ACM Queue, 2016) — the design lessons across all three, from the people who built them.
 
 **Load-bearing KEPs** (browse by number at https://github.com/kubernetes/enhancements)
 

@@ -22,6 +22,7 @@ PARTS = [
     ("Part B — Controllers", ["ch05.md", "ch06.md"]),
     ("Part C — Standards & Extension Interfaces", ["ch07.md", "ch08.md", "ch09.md"]),
     ("Part D — Operating at Scale", ["ch10.md"]),
+    ("Part E — Judgment at Principal Scale", ["ch11.md", "ch12.md"]),
     ("Appendices", ["appendices.md"]),
 ]
 
@@ -108,9 +109,9 @@ for part_title, files in PARTS:
         html = md2html(text)
         html = re.sub(r"<h3>Flow (\d+): (.*?)</h3>", flow_sub, html)
         if fn == "appendices.md":
-            html = re.sub(r"<h2>(Appendix [A-D][^<]*)</h2>",
+            html = re.sub(r"<h2>(Appendix [A-E][^<]*)</h2>",
                           lambda mm: f'<h2 class="chapter-title appendix" id="{slug(mm.group(1)[:10])}">{mm.group(1)}</h2>', html)
-            for mm in re.finditer(r'id="(appendix-[a-d])">([^<]+)<', html):
+            for mm in re.finditer(r'id="(appendix-[a-e])">([^<]+)<', html):
                 toc_entries.append((0, mm.group(2), mm.group(1)))
             body_parts.append(f'<section class="chapter">{html}</section>')
         else:
@@ -125,7 +126,7 @@ for level, title, anchor in toc_entries:
     cls = "toc-part" if level == 0 else "toc-ch"
     toc_html.append(f'<li class="{cls}"><a href="#{anchor}"><span class="t">{title}</span><span class="pg"></span></a></li>')
 toc_html.append("</ul>")
-toc_html.append('<h2 class="toc-h">The 28 flows</h2><ul class="toc flows">')
+toc_html.append('<h2 class="toc-h">The 30 flows</h2><ul class="toc flows">')
 for num, title, anchor in sorted(flow_entries):
     toc_html.append(f'<li class="toc-flow"><a href="#{anchor}"><span class="t"><b>{num}.</b> {title}</span><span class="pg"></span></a></li>')
 toc_html.append("</ul></div>")
