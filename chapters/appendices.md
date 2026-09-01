@@ -162,9 +162,18 @@ What interviewers listen for, by tier:
 | 3 — Design/Debug | Failure-mode and scale instincts | Asks clarifying questions, bisects systematically, sizes things (objects × bytes, qps), states blast radius and recovery | Jumps to one tool, ignores scale numbers, no failure story |
 | 4 — Judge (principal+) | Consequence, economics, strategy | Frames the org and fleet consequence, names assumptions and kill-criteria, argues the strongest counter-position before committing, cites history ("we tried X, it failed because…") | Mechanism-perfect but consequence-free; "it depends" with no decision; trend name-dropping without a position |
 
-Five signals that run across all tiers: (1) mechanism accuracy; (2) naming the acting component; (3) trade-off awareness; (4) failure-mode instincts — unprompted "and if that's down…"; (5) scale instincts — unprompted "and at 10k objects…".
+Five signals that run across all tiers:
 
-Two more mark principal-level answers — and a staff candidate who shows them signals the next rung: (6) economic framing — cost, people, and risk enter the answer unprompted; (7) kill-criteria — the answer states what evidence would change the recommendation.
+1. Mechanism accuracy.
+2. Naming the acting component.
+3. Trade-off awareness.
+4. Failure-mode instincts — unprompted "and if that's down…".
+5. Scale instincts — unprompted "and at 10k objects…".
+
+Two more mark principal-level answers — and a staff candidate who shows them signals the next rung:
+
+6. Economic framing — cost, people, and risk enter the answer unprompted.
+7. Kill-criteria — the answer states what evidence would change the recommendation.
 
 **Weak vs strong, same question** — "What happens when a liveness probe fails?"
 
