@@ -9,6 +9,7 @@
 - Define every piece of jargon at first use, in one clause: "the informer (a client-side cache that watches the API server)".
 - High signal, low noise: no filler ("It is important to note that…", "In the world of Kubernetes…"), no marketing tone, no repetition of what another section already said — cross-reference instead ("see Flow 1").
 - Present tense. Active voice. "The scheduler writes a Binding" not "A Binding is written".
+- Lists for parallel items: if a paragraph enumerates two or more parallel items — kinds, options, defenses — keep the lead-in sentence as prose and put each item on its own bullet with a bold lead term: `- **Predicate:** filters the nodes that can run the pod.` Use a table instead when the items share the same attributes (columns).
 - Never invent facts. Version-sensitive claims MUST match `notes/research-notes.md`. Baseline is Kubernetes v1.36.
 
 ## File format
@@ -34,7 +35,13 @@ Contents, in order:
 1. One-sentence setup ("You run `kubectl cordon node-1`.").
 2. **Numbered steps.** Each step starts with the acting component in bold: `1. **kubectl** sends a PATCH …`. One actor-action per step. 6–15 steps. If a step hides interview-relevant depth, add an indented sub-bullet, max one per step.
 3. **A mermaid diagram** in a fenced ` ```mermaid ` block, immediately after the steps, followed by an italic caption line: `*Figure N.M — one line saying what to notice.*` (N = chapter, M = running count within chapter).
-4. **Where this can fail** — 3–6 bullets: `- **Symptom:** … **Cause:** … **Where to look:** …`.
+4. **Where this can fail** — 3–6 symptom bullets. Each bullet carries the symptom, then two indented sub-bullets (4 spaces — the PDF build flattens 2-space indents):
+
+   ```markdown
+   - **Symptom:** endless stream of 409s in controller logs.
+       - **Cause:** hot object plus retry without jitter, or retrying from a stale cache.
+       - **Where to look:** controller logs; `managedFields` for who else writes.
+   ```
 
 ## Mermaid rules (build breaks if you're clever)
 
