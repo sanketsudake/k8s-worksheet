@@ -10,7 +10,7 @@
 - High signal, low noise: no filler ("It is important to note that…", "In the world of Kubernetes…"), no marketing tone, no repetition of what another section already said — cross-reference instead ("see Flow 1").
 - Present tense. Active voice. "The scheduler writes a Binding" not "A Binding is written".
 - Lists for parallel items: if a paragraph enumerates two or more parallel items — kinds, options, defenses — keep the lead-in sentence as prose and put each item on its own bullet with a bold lead term: `- **Predicate:** filters the nodes that can run the pod.` Use a table instead when the items share the same attributes (columns).
-- Never invent facts. Version-sensitive claims MUST match `notes/research-notes.md`. Baseline is Kubernetes v1.36.
+- Never invent facts. Version-sensitive claims MUST match `notes/research-notes.md`. Baseline is Kubernetes v1.37.
 
 ## File format
 
