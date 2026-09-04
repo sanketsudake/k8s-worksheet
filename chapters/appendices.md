@@ -101,6 +101,7 @@ The failure-mode matrix — which component going down breaks what — lives in 
 - **Binding** — the API write that sets a pod's `nodeName`; the scheduler's actual output.
 - **Bookmark** — a watch event that only advances the client's resourceVersion, keeping a resumed watch cheap.
 - **CDI (Container Device Interface)** — the spec format a device driver hands the runtime to inject device nodes, mounts, and env into a container.
+- **ClusterTrustBundle** — a cluster-scoped object holding CA certificates, delivered to pods through a projected volume (GA in v1.37).
 - **CNI (Container Network Interface)** — the binary contract the runtime invokes to wire a pod into the network.
 - **Condition** — a typed status entry (`type`, `status`, `reason`) reporting one aspect of an object's state.
 - **Conntrack** — the kernel's connection-tracking table; remembers NAT decisions per flow.
@@ -109,7 +110,7 @@ The failure-mode matrix — which component going down breaks what — lives in 
 - **CRD (CustomResourceDefinition)** — an object that adds a new API type to the cluster.
 - **CRI (Container Runtime Interface)** — the gRPC API the kubelet uses to talk to the runtime.
 - **CSI (Container Storage Interface)** — the gRPC contract storage drivers implement for provisioning and mounting volumes.
-- **DRA (Dynamic Resource Allocation)** — the claim-based API (GA since v1.34) for allocating devices like GPUs.
+- **DRA (Dynamic Resource Allocation)** — the claim-based API (GA since v1.34) for allocating devices like GPUs; since v1.37 it also serves plain extended-resource requests.
 - **DeltaFIFO** — the informer's internal queue of object changes between the reflector and the cache.
 - **DeviceClass** — the DRA object an admin curates to preselect devices; the StorageClass analog.
 - **EndpointSlice** — a chunk of a Service's backend addresses; sliced to keep watch updates small.
@@ -122,7 +123,8 @@ The failure-mode matrix — which component going down breaks what — lives in 
 - **HPA (Horizontal Pod Autoscaler)** — controller that changes replica counts based on metrics.
 - **Informer** — a client-side cache that lists then watches a resource and calls handlers on changes.
 - **Kubelet** — the node agent that runs pods via CRI and reports status.
-- **kube-proxy** — the per-node component programming Service routing rules (iptables, IPVS, or nftables).
+- **KYAML** — a strict YAML subset for Kubernetes manifests; `kubectl get -o kyaml` (stable in v1.37).
+- **kube-proxy** — the per-node component programming Service routing rules (iptables, nftables, or the deprecated IPVS).
 - **Leader election** — using a Lease object so only one replica of a controller acts at a time.
 - **Lease** — a small object renewed periodically to signal liveness (node heartbeats, leader election).
 - **Level-triggered** — reacting to observed state, not to individual events; missed events don't matter.
@@ -130,6 +132,7 @@ The failure-mode matrix — which component going down breaks what — lives in 
 - **nominatedNodeName** — the pod status field marking where preemption freed room; a hint, not a reservation.
 - **OwnerReference** — a pointer from a child object to its parent, driving cascading deletion.
 - **PDB (PodDisruptionBudget)** — a floor on ready pods that voluntary evictions must respect.
+- **PodCertificateRequest** — the object a kubelet creates to obtain an X.509 certificate for a pod from a signer controller (GA in v1.37).
 - **PLEG (pod lifecycle event generator)** — the kubelet part that watches the runtime for container state changes and feeds the sync loop.
 - **Preemption** — the scheduler evicting lower-priority pods to make room for a pending one.
 - **Quorum** — the majority of etcd members required to commit writes.
@@ -143,7 +146,8 @@ The failure-mode matrix — which component going down breaks what — lives in 
 - **Sandbox** — the pod's shared environment (network namespace, cgroup parent) created before containers.
 - **Server-Side Apply (SSA)** — declarative PATCH where the API server merges fields and tracks per-field ownership.
 - **Sidecar container** — an init container with `restartPolicy: Always`; runs alongside app containers (stable v1.33).
-- **Static pod** — a pod run by the kubelet from a local file, independent of the API server.
+- **Static pod** — a pod run by the kubelet from a local file, independent of the API server; it cannot reference Secrets or ConfigMaps.
+- **StorageVersionMigration** — the object that asks the control plane to rewrite stored resources to the current storage version or encryption key (GA in v1.37).
 - **Taint / toleration** — node-side repellent and pod-side exemption controlling placement and eviction.
 - **Topology spread constraint** — a rule spreading replicas across zones or nodes.
 - **VolumeAttachment** — the object recording that a volume is attached to a node; driven by the attach-detach controller.
@@ -207,7 +211,7 @@ Chapters 1–10 teach mechanisms. At principal and distinguished level the inter
 
 | Workload shape | Why Kubernetes strains | What wins today | What would change the answer |
 |---|---|---|---|
-| Large-scale ML training | Gang, topology, and fabric scheduling are add-ons (Kueue, Volcano), not defaults | Slurm-class schedulers still run the biggest dedicated training fleets | DRA maturity plus queueing layers closing the gap |
+| Large-scale ML training | Gang scheduling is in-tree only at beta (gated off); topology and fabric scheduling remain add-ons (Kueue, Volcano) | Slurm-class schedulers still run the biggest dedicated training fleets | DRA maturity plus queueing layers closing the gap |
 | A handful of services | A platform team costs more than the product | PaaS or serverless | Fleet growth or compliance requirements |
 | Bursty, event-shaped work | Paying for idle nodes; cold-start fights | Serverless platforms | A sustained baseline load appears |
 | Hard real-time or kernel-bypass | The abstraction is in the way: scheduling jitter, network stack | Bare metal, specialized OS | Rarely changes |
@@ -244,7 +248,7 @@ Argue both sides out loud, then commit — expect the follow-up to attack whiche
 2. **"etcd was the wrong choice."** For: the ~8 GiB practical ceiling and watch fan-out cap cluster size and forced the fleet era. Against: strict consistency made resourceVersion, watches, and optimistic concurrency simple enough to build an ecosystem on. A position: right choice then; the mistake today is treating one etcd as the unit of scale — cluster sharding is the working answer, sharded list/watch the upstream one.
 3. **"CRDs created an unmaintainable ecosystem."** For: every install drags in third-party APIs with unowned lifecycles; abandoned operators rot clusters. Against: CRDs are why Kubernetes won — the extensibility flywheel produced the ecosystem that made it the default. A position: the flywheel was worth it; the missing half is discipline — own your CRDs like public APIs, audit third-party ones like dependencies.
 4. **"The service-mesh sidecar was a mistake."** For: per-pod proxies taxed every pod's memory and latency, and their lifecycle problems were bad enough that Kubernetes built native sidecar support (Chapter 4). Against: sidecars delivered mesh features a decade before kernels could, with per-pod isolation. A position: right pattern for its decade; L3/L4 belongs in the kernel now (eBPF, ambient), and sidecars retreat to the heavy-L7 cases that still pay their rent.
-5. **"Kubernetes will lose AI training to specialized schedulers."** For: Slurm-class systems still own the biggest training fleets; gang and topology scheduling remain add-ons. Against: DRA is GA, queueing layers are maturing, and "everything else already runs here" is enormous gravity. A position: inference is already Kubernetes'; training converges as DRA and queueing close the gap — bet on convergence, and keep a bridge to the dedicated fleet meanwhile.
+5. **"Kubernetes will lose AI training to specialized schedulers."** For: Slurm-class systems still own the biggest training fleets; in-tree gang scheduling is beta and gated off, and topology scheduling remains an add-on. Against: DRA is GA, queueing layers are maturing, and "everything else already runs here" is enormous gravity. A position: inference is already Kubernetes'; training converges as DRA and queueing close the gap — bet on convergence, and keep a bridge to the dedicated fleet meanwhile.
 
 ## Appendix E — Further reading
 
@@ -254,6 +258,8 @@ Argue both sides out loud, then commit — expect the follow-up to attack whiche
 - Reference section: https://kubernetes.io/docs/reference/ — API conventions and the "API Concepts" page (resourceVersion semantics, watches, SSA).
 - Large-cluster considerations and scalability thresholds: https://kubernetes.io/docs/setup/best-practices/cluster-large/
 - etcd documentation: https://etcd.io/docs/ — raft, quotas, maintenance (compaction, defrag, snapshot restore).
+- Kubernetes v1.37 release blog: https://kubernetes.io/blog/2026/08/26/kubernetes-v1-37-release/ — the baseline release for this edition.
+- Pod certificates and ClusterTrustBundles: https://kubernetes.io/blog/2026/08/28/kubernetes-v1-37-pod-certificates-and-cluster-trust-bundles/ — the issuance flow behind Chapter 2's identity paragraph.
 
 **Lineage papers (read before a distinguished-level loop)**
 
