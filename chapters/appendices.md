@@ -123,8 +123,8 @@ The failure-mode matrix — which component going down breaks what — lives in 
 - **HPA (Horizontal Pod Autoscaler)** — controller that changes replica counts based on metrics.
 - **Informer** — a client-side cache that lists then watches a resource and calls handlers on changes.
 - **Kubelet** — the node agent that runs pods via CRI and reports status.
-- **KYAML** — a strict YAML subset for Kubernetes manifests; `kubectl get -o kyaml` (stable in v1.37).
 - **kube-proxy** — the per-node component programming Service routing rules (iptables, nftables, or the deprecated IPVS).
+- **KYAML** — a strict YAML subset for Kubernetes manifests; `kubectl get -o kyaml` (stable in v1.37).
 - **Leader election** — using a Lease object so only one replica of a controller acts at a time.
 - **Lease** — a small object renewed periodically to signal liveness (node heartbeats, leader election).
 - **Level-triggered** — reacting to observed state, not to individual events; missed events don't matter.
@@ -132,8 +132,8 @@ The failure-mode matrix — which component going down breaks what — lives in 
 - **nominatedNodeName** — the pod status field marking where preemption freed room; a hint, not a reservation.
 - **OwnerReference** — a pointer from a child object to its parent, driving cascading deletion.
 - **PDB (PodDisruptionBudget)** — a floor on ready pods that voluntary evictions must respect.
-- **PodCertificateRequest** — the object a kubelet creates to obtain an X.509 certificate for a pod from a signer controller (GA in v1.37).
 - **PLEG (pod lifecycle event generator)** — the kubelet part that watches the runtime for container state changes and feeds the sync loop.
+- **PodCertificateRequest** — the object a kubelet creates to obtain an X.509 certificate for a pod from a signer controller (GA in v1.37).
 - **Preemption** — the scheduler evicting lower-priority pods to make room for a pending one.
 - **Quorum** — the majority of etcd members required to commit writes.
 - **Reconcile** — one run of a controller's logic for one object: observe, diff, act.
