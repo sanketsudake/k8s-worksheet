@@ -28,7 +28,9 @@ PARTS = [
 
 # ---- puppeteer config for mermaid-cli ----
 PPTR = os.path.join(DIST, "puppeteer.json")
-pptr_cfg = {"args": ["--no-sandbox"]}
+# 90 s launch timeout: the first Chrome start on a cold CI runner can exceed
+# puppeteer's 30 s default and fail the first diagram only.
+pptr_cfg = {"args": ["--no-sandbox"], "timeout": 90000}
 chrome = os.environ.get("CHROME_PATH") or (
     "/opt/pw-browsers/chromium" if os.path.exists("/opt/pw-browsers/chromium") else shutil.which("chromium") or shutil.which("google-chrome"))
 if chrome:
@@ -55,12 +57,16 @@ def render_mermaid(code: str) -> str:
         src = os.path.join(DIA, f"{h}.mmd")
         with open(src, "w") as f:
             f.write(code)
-        r = subprocess.run(
-            ["mmdc", "-i", src, "-o", png, "-b", "white", "-s", "3", "-w", "1000",
-             "-p", PPTR, "-c", MERMAID_CFG, "--quiet"],
-            capture_output=True, text=True)
-        if r.returncode != 0 or not os.path.exists(png):
-            print(f"MERMAID FAIL {h}: {r.stderr[-600:]}", file=sys.stderr)
+        cmd = ["mmdc", "-i", src, "-o", png, "-b", "white", "-s", "3", "-w", "1000",
+               "-p", PPTR, "-c", MERMAID_CFG, "--quiet"]
+        # One retry: a browser-launch timeout on a cold runner is transient,
+        # and a real diagram error fails the same way twice.
+        for attempt in (1, 2):
+            r = subprocess.run(cmd, capture_output=True, text=True)
+            if r.returncode == 0 and os.path.exists(png):
+                break
+            print(f"MERMAID FAIL {h} (attempt {attempt}): {r.stderr[:600]}", file=sys.stderr)
+        else:
             return None
     return png
 
